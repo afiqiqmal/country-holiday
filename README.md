@@ -68,7 +68,7 @@ PHP 8.2 and above
 
 run
 
-`composer require afiqiqmal/Holiday`
+`composer require afiqiqmal/country-holiday`
 
 ### Sample
 <pre>

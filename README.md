@@ -1,10 +1,8 @@
 # National Holidays :airplane:
 Parsing National Public Holidays
 
-[![Build Status](https://travis-ci.org/afiqiqmal/CountryHoliday.svg?branch=master)](https://travis-ci.org/afiqiqmal/CountryHoliday)
-[![Coverage](https://img.shields.io/codecov/c/github/afiqiqmal/CountryHoliday.svg)](https://codecov.io/gh/afiqiqmal/CountryHoliday)
-[![Packagist](https://img.shields.io/packagist/dt/afiqiqmal/CountryHoliday.svg)](https://packagist.org/packages/afiqiqmal/CountryHoliday)
-[![Packagist](https://img.shields.io/packagist/v/afiqiqmal/CountryHoliday.svg)](https://packagist.org/packages/afiqiqmal/CountryHoliday)
+[![Packagist](https://img.shields.io/packagist/dt/afiqiqmal/country-holiday.svg)](https://packagist.org/packages/afiqiqmal/country-holiday)
+[![Packagist](https://img.shields.io/packagist/v/afiqiqmal/country-holiday.svg)](https://packagist.org/packages/afiqiqmal/country-holiday)
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/paypalme/mhi9388?locale.x=en_US)
 
 

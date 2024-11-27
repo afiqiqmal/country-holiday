@@ -27,6 +27,50 @@ class HolidayTest extends TestCase
         $this->assertTrue($response['status']);
     }
 
+    public function testGetAllRegionInAlbaniaHoliday()
+    {
+        $response = Holiday::for('albania')->get();
+
+        $this->assertTrue($response['status']);
+
+        $response = Holiday::for('albania')->fromAllStates()->get();
+
+        $this->assertTrue($response['status']);
+    }
+
+    public function testGetAllRegionInNigeriaHoliday()
+    {
+        $response = Holiday::for('nigeria')->get();
+
+        $this->assertTrue($response['status']);
+
+        $response = Holiday::for('nigeria')->fromAllStates()->get();
+
+        $this->assertTrue($response['status']);
+    }
+
+    public function testGetAllRegionInJordanHoliday()
+    {
+        $response = Holiday::for('jordan')->get();
+
+        $this->assertTrue($response['status']);
+
+        $response = Holiday::for('jordan')->fromAllStates()->get();
+
+        $this->assertTrue($response['status']);
+    }
+
+    public function testGetAllRegionInIndonesiaHoliday()
+    {
+        $response = Holiday::for('indonesia')->get();
+
+        $this->assertTrue($response['status']);
+
+        $response = Holiday::for('indonesia')->fromAllStates()->get();
+
+        $this->assertTrue($response['status']);
+    }
+
     /**
      * To test getting specific region holiday
      */

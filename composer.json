@@ -1,6 +1,6 @@
 {
     "name": "afiqiqmal/country-holiday",
-    "description": "to get all holidays date in malaysia",
+    "description": "to get all holidays date in any countries",
     "type": "package",
     "keywords": ["php"],
     "license": "MIT",

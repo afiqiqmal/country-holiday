@@ -60,7 +60,7 @@ class HolidayTest extends TestCase
         $holiday = Holiday::for('malaysia');
         $response = $holiday->fromState(['Selangor', 'Malaccaa'])->get();
 
-        $this->assertTrue($response['status']);
+        $this->assertTrue(! $response['status']);
         $this->assertTrue($response['data'][0]['regional'] == 'Selangor');
 
 

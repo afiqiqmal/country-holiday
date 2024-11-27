@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests;
+namespace Holiday\Tests;
 
 require_once __DIR__ .'/../vendor/autoload.php';
 

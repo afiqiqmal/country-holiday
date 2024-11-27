@@ -1,15 +1,20 @@
 {
     "name": "afiqiqmal/country-holiday",
-    "description": "to get all holidays date in any countries",
-    "type": "package",
-    "keywords": ["php"],
+    "description": "A PHP package to retrieve holiday dates for various countries.",
+    "type": "library",
+    "keywords": ["php", "holidays", "dates", "countries", "calendar", "public holidays"],
     "license": "MIT",
     "authors": [
         {
-            "name": "Hafiq",
-            "email": "hafiqiqmal93@gmail.com"
+            "name": "Hafiq Iqmal",
+            "email": "hafiqiqmal93@gmail.com",
+            "role": "Developer"
         }
     ],
+    "support": {
+        "issues": "https://github.com/afiqiqmal/country-holiday/issues",
+        "source": "https://github.com/afiqiqmal/country-holiday"
+    },
     "require": {
         "php": ">=8.2",
         "symfony/browser-kit": "^7.0",
@@ -26,7 +31,16 @@
     "minimum-stability": "stable",
     "autoload": {
         "psr-4": {
-            "Holiday\\":"src/"
+            "Holiday\\": "src/"
         }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Holiday\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true
     }
 }

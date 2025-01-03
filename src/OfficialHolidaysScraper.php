@@ -109,6 +109,7 @@ class OfficialHolidaysScraper implements HolidayScraperInterface
         $temp['month'] = date('F', strtotime($temp['date']));
         $temp['name'] = trim($node->children()->eq(2)->text());
         $temp['description'] = trim($node->children()->eq(3)->text());
+        $temp['comments'] = trim($node->children()->eq(4)->text());
 
         return $temp;
     }

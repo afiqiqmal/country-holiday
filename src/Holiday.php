@@ -155,7 +155,6 @@ class Holiday
      */
     private function queryHolidays(HolidayProviderInterface $provider, ?array $regions): array
     {
-        var_dump($this->year);
         $year = $this->year ?? (int)date('Y');
         $final = [];
         $error_messages = [];

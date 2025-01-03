@@ -52,7 +52,7 @@ class Holiday
     public function fromAllStates(?int $year = null): self
     {
         $this->selectedRegions = null;
-        $this->year = $year;
+        $this->year = $year ?? $this->year;
         return $this;
     }
 
@@ -66,7 +66,8 @@ class Holiday
     public function fromState(array|string $regions, ?int $year = null): self
     {
         $this->selectedRegions = $regions;
-        $this->year = $year;
+        $this->year = $year ?? $this->year;
+
         return $this;
     }
 
@@ -154,6 +155,7 @@ class Holiday
      */
     private function queryHolidays(HolidayProviderInterface $provider, ?array $regions): array
     {
+        var_dump($this->year);
         $year = $this->year ?? (int)date('Y');
         $final = [];
         $error_messages = [];

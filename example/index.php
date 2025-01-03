@@ -10,8 +10,9 @@ require_once __DIR__ .'/../vendor/autoload.php';
 
 use Holiday\Holiday;
 
-$result = Holiday::for('albania')
-    ->fromState('Abia')
+$result = Holiday::for('malaysia')
+    ->ofYear(2026)
+    ->fromState('Selangor')
     ->get();
 
 

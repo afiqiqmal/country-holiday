@@ -10,6 +10,7 @@ use Symfony\Component\BrowserKit\HttpBrowser;
 class Holiday
 {
     private string $country;
+    private ?HttpBrowser $client;
     private string|array|null $selectedRegions = null;
     private int|null $year = null;
     private int|null $month = null;
@@ -30,6 +31,7 @@ class Holiday
     public function __construct(string $country, ?HttpBrowser $client = null)
     {
         $this->country = $country;
+        $this->client = $client;
     }
 
     /**
@@ -115,13 +117,15 @@ class Holiday
     public function get(): array
     {
         // Get holiday provider for the country
-        $provider = HolidayProviderFactory::create($this->country);
+        $provider = HolidayProviderFactory::create($this->country, $this->client);
 
-        // Determine regions to retrieve
-        $regions = $this->determineRegions($provider);
-
-        // Prepare results
-        $result = $this->queryHolidays($provider, $regions);
+        // Determine regions to retrieve and prepare results
+        try {
+            $regions = $this->determineRegions($provider);
+            $result = $this->queryHolidays($provider, $regions);
+        } catch (\Exception $e) {
+            $result = $this->buildResponse([], [$e->getMessage()]);
+        }
 
         // Apply additional filtering
         return $this->processResults($result);
@@ -193,9 +197,21 @@ class Holiday
             }
         }
 
+        return $this->buildResponse($final, $error_messages);
+    }
+
+    /**
+     * Build the response payload.
+     *
+     * @param array $data Holiday data
+     * @param array $error_messages Error messages
+     * @return array Response payload
+     */
+    private function buildResponse(array $data, array $error_messages): array
+    {
         return [
             'status' => empty($error_messages),
-            'data' => $final,
+            'data' => $data,
             'error_messages' => $error_messages,
             'developer' => [
                 "name" => "Hafiq",

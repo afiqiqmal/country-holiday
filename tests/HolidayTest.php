@@ -5,6 +5,7 @@ namespace Holiday\Tests;
 require_once __DIR__ .'/../vendor/autoload.php';
 
 use Holiday\Holiday;
+use Holiday\Providers\HolidayProviderFactory;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -113,5 +114,41 @@ class HolidayTest extends TestCase
 
         $this->assertCount(1, $response['error_messages']);
         $this->assertTrue($response['error_messages'][0] == 'Region \'Malaccaa\' is not supported for this country.');
+    }
+
+    public function testSabahIsSupported()
+    {
+        $response = Holiday::for('malaysia')->fromState('Sabah', 2026)->get();
+
+        $this->assertTrue($response['status']);
+        $this->assertNotEmpty($response['data'][0]['collection'][0]['data']);
+    }
+
+    public function testHolidayTypesAreClassified()
+    {
+        $holidays = HolidayProviderFactory::create('malaysia')->getHolidays(null, 2026);
+        $holidays = array_values(array_filter($holidays));
+
+        $this->assertNotEmpty($holidays);
+        $this->assertNotContains('Unknown', array_column($holidays, 'type'));
+
+        $this->assertContains(1, array_column($holidays, 'type_id'));
+    }
+
+    public function testRegionUsesSiteSlug()
+    {
+        $response = Holiday::for('usa')->fromState(['Georgia', 'District of Columbia'], 2026)->get();
+
+        $this->assertTrue($response['status']);
+        $this->assertNotEmpty($response['data'][0]['collection'][0]['data']);
+        $this->assertNotEmpty($response['data'][1]['collection'][0]['data']);
+    }
+
+    public function testUnknownCountryReturnsError()
+    {
+        $response = Holiday::for('united-states')->get();
+
+        $this->assertFalse($response['status']);
+        $this->assertNotEmpty($response['error_messages']);
     }
 }

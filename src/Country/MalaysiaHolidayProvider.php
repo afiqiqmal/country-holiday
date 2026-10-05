@@ -19,6 +19,7 @@ class MalaysiaHolidayProvider extends AbstractCountryHolidayProvider
         'Perak',
         'Perlis',
         'Putrajaya',
+        'Sabah',
         'Sarawak',
         'Selangor',
         'Terengganu'

@@ -29,7 +29,7 @@ class OfficialHolidaysScraper implements HolidayScraperInterface
      */
     public function scrape(string $url, int $year): array
     {
-        $crawler = $this->client->request('GET', $url);
+        $crawler = $this->request($url);
 
         return $crawler->filter('.country-table tr')->each(
             function ($node) use ($year) {
@@ -38,24 +38,49 @@ class OfficialHolidaysScraper implements HolidayScraperInterface
         );
     }
 
+    /**
+     * Scrape the regions/states of a country.
+     *
+     * @param string $url The country URL
+     * @return array<string, string> Region name => URL slug
+     */
     public function scrapeStates(string $url): array
     {
-        $crawler = $this->client->request('GET', $url);
+        $crawler = $this->request($url);
+        $states = [];
 
-        return array_filter(
-            $crawler->filter('select.region_select option')->each(
-                function (Crawler $node) {
+        $crawler->filter('select.region_select option')->each(
+            function (Crawler $node) use (&$states) {
+                $value = $node->attr('value');
 
-                    if ($node->attr('value') === 'all' ||
-                        $node->attr('value') === '' ||
-                        $node->attr('value') === null) {
-                        return null;
-                    }
-
-                    return $node->innerText();
+                if ($value === 'all' || $value === '' || $value === null) {
+                    return;
                 }
-            )
+
+                $states[trim($node->innerText())] = ltrim($value, '/');
+            }
         );
+
+        return $states;
+    }
+
+    /**
+     * Request a page and ensure it was found.
+     *
+     * @param string $url The URL to request
+     * @return Crawler
+     * @throws \RuntimeException If the page could not be retrieved
+     */
+    private function request(string $url): Crawler
+    {
+        $crawler = $this->client->request('GET', $url);
+        $status = $this->client->getInternalResponse()->getStatusCode();
+
+        if ($status !== 200) {
+            throw new \RuntimeException("Failed to retrieve holidays from {$url} (HTTP {$status}).");
+        }
+
+        return $crawler;
     }
 
     /**
@@ -132,6 +157,14 @@ class OfficialHolidaysScraper implements HolidayScraperInterface
 
         $holidayTypeMap = [
             'govt_holiday' => [
+                'type' => "Government/Public Sector Holiday",
+                'type_id' => 1
+            ],
+            'govt-past' => [
+                'type' => "Government/Public Sector Holiday",
+                'type_id' => 1
+            ],
+            'govt' => [
                 'type' => "Government/Public Sector Holiday",
                 'type_id' => 1
             ],

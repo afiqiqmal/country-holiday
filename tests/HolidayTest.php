@@ -3,10 +3,13 @@
 namespace Holiday\Tests;
 
 require_once __DIR__ .'/../vendor/autoload.php';
+require_once __DIR__ .'/Support/Fixtures.php';
 
 use Holiday\Holiday;
 use Holiday\Providers\HolidayProviderFactory;
+use Holiday\Tests\Support\Fixtures;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\BrowserKit\HttpBrowser;
 
 /**
  * HolidayTest.php
@@ -14,60 +17,67 @@ use PHPUnit\Framework\TestCase;
  */
 class HolidayTest extends TestCase
 {
+    private const YEAR = 2026;
+
+    private function holiday(string $country): Holiday
+    {
+        return new Holiday($country, new HttpBrowser(Fixtures::client()));
+    }
+
     /**
      * To test getting all region holiday in Malaysia
      */
     public function testGetAllRegionInMalaysiaHoliday()
     {
-        $response = Holiday::for('malaysia')->get();
+        $response = $this->holiday('malaysia')->ofYear(self::YEAR)->get();
 
         $this->assertTrue($response['status']);
 
-        $response = Holiday::for('malaysia')->fromAllStates()->get();
+        $response = $this->holiday('malaysia')->fromAllStates(self::YEAR)->get();
 
         $this->assertTrue($response['status']);
     }
 
     public function testGetAllRegionInAlbaniaHoliday()
     {
-        $response = Holiday::for('albania')->get();
+        $response = $this->holiday('albania')->ofYear(self::YEAR)->get();
 
         $this->assertTrue($response['status']);
 
-        $response = Holiday::for('albania')->fromAllStates()->get();
+        $response = $this->holiday('albania')->fromAllStates(self::YEAR)->get();
 
         $this->assertTrue($response['status']);
     }
 
     public function testGetAllRegionInNigeriaHoliday()
     {
-        $response = Holiday::for('nigeria')->get();
+        $response = $this->holiday('nigeria')->ofYear(self::YEAR)->get();
 
         $this->assertTrue($response['status']);
 
-        $response = Holiday::for('nigeria')->fromAllStates()->get();
+        $response = $this->holiday('nigeria')->fromAllStates(self::YEAR)->get();
 
         $this->assertTrue($response['status']);
     }
 
     public function testGetAllRegionInJordanHoliday()
     {
-        $response = Holiday::for('jordan')->get();
+        $response = $this->holiday('jordan')->ofYear(self::YEAR)->get();
 
         $this->assertTrue($response['status']);
 
-        $response = Holiday::for('jordan')->fromAllStates()->get();
+        $response = $this->holiday('jordan')->fromAllStates(self::YEAR)->get();
 
         $this->assertTrue($response['status']);
     }
 
     public function testGetAllRegionInIndonesiaHoliday()
     {
-        $response = Holiday::for('indonesia')->get();
+        $response = $this->holiday('indonesia')->ofYear(self::YEAR)->get();
 
         $this->assertTrue($response['status']);
 
-        $response = Holiday::for('indonesia')->fromAllStates()->get();
+        $response = $this->holiday('indonesia')->fromAllStates(self::YEAR)->get();
 
         $this->assertTrue($response['status']);
     }
@@ -77,8 +87,8 @@ class HolidayTest extends TestCase
      */
     public function testGetSpecificRegionHoliday()
     {
-        $holiday = Holiday::for('malaysia');
-        $response = $holiday->fromState('Selangor')->get();
+        $holiday = $this->holiday('malaysia');
+        $response = $holiday->fromState('Selangor', self::YEAR)->get();
 
         $this->assertTrue($response['status']);
         $this->assertTrue($response['data'][0]['regional'] == 'Selangor');
@@ -89,8 +99,8 @@ class HolidayTest extends TestCase
      */
     public function testGetMultipleRegionsHoliday()
     {
-        $holiday = Holiday::for('malaysia');
-        $response = $holiday->fromState(['Selangor', 'Malacca'])->get();
+        $holiday = $this->holiday('malaysia');
+        $response = $holiday->fromState(['Selangor', 'Malacca'], self::YEAR)->get();
 
         $this->assertTrue($response['status']);
         $this->assertTrue($response['data'][0]['regional'] == 'Selangor');
@@ -102,8 +112,8 @@ class HolidayTest extends TestCase
      */
     public function testErrorMessage()
     {
-        $holiday = Holiday::for('malaysia');
-        $response = $holiday->fromState(['Selangor', 'Malaccaa'])->get();
+        $holiday = $this->holiday('malaysia');
+        $response = $holiday->fromState(['Selangor', 'Malaccaa'], self::YEAR)->get();
 
         $this->assertTrue(! $response['status']);
         $this->assertTrue($response['data'][0]['regional'] == 'Selangor');
@@ -118,7 +128,7 @@ class HolidayTest extends TestCase
 
     public function testSabahIsSupported()
     {
-        $response = Holiday::for('malaysia')->fromState('Sabah', 2026)->get();
+        $response = $this->holiday('malaysia')->fromState('Sabah', self::YEAR)->get();
 
         $this->assertTrue($response['status']);
         $this->assertNotEmpty($response['data'][0]['collection'][0]['data']);
@@ -126,7 +136,7 @@ class HolidayTest extends TestCase
 
     public function testHolidayTypesAreClassified()
     {
-        $holidays = HolidayProviderFactory::create('malaysia')->getHolidays(null, 2026);
+        $holidays = HolidayProviderFactory::create('malaysia', new HttpBrowser(Fixtures::client()))->getHolidays(null, self::YEAR);
         $holidays = array_values(array_filter($holidays));
 
         $this->assertNotEmpty($holidays);
@@ -137,7 +147,7 @@ class HolidayTest extends TestCase
 
     public function testRegionUsesSiteSlug()
     {
-        $response = Holiday::for('usa')->fromState(['Georgia', 'District of Columbia'], 2026)->get();
+        $response = $this->holiday('usa')->fromState(['Georgia', 'District of Columbia'], self::YEAR)->get();
 
         $this->assertTrue($response['status']);
         $this->assertNotEmpty($response['data'][0]['collection'][0]['data']);
@@ -146,7 +156,7 @@ class HolidayTest extends TestCase
 
     public function testUnknownCountryReturnsError()
     {
-        $response = Holiday::for('united-states')->get();
+        $response = $this->holiday('united-states')->ofYear(self::YEAR)->get();
 
         $this->assertFalse($response['status']);
         $this->assertNotEmpty($response['error_messages']);
